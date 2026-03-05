@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Opening Form</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root { --primary-color: #d35400; --secondary-color: #e67e22; --bg-color: #fffaf0; --form-bg: #ffffff; --text-color: #333333; --border-color: #f0cdb6; --highlight-bg: #fae5d3; }
+        body { font-family: "Microsoft YaHei", sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .top-bar { width: 100%; max-width: 1000px; display: flex; justify-content: flex-end; margin-bottom: 20px; }
+        select { padding: 8px 12px; font-size: 14px; border: 1px solid var(--primary-color); border-radius: 4px; background-color: white; color: var(--primary-color); cursor: pointer; }
+        #pdf-export-container { width: 100%; max-width: 1000px; background-color: var(--form-bg); padding: 40px; box-shadow: 0 4px 15px rgba(211,84,0,0.08); border-top: 5px solid var(--primary-color); box-sizing: border-box; }
+        .web-page { display: none; } .web-page.active { display: block; }
+        .section { margin-bottom: 30px; border: 1px solid var(--border-color); padding: 20px; border-radius: 4px; }
+        .section-title { background-color: var(--highlight-bg); padding: 10px; font-weight: bold; color: var(--primary-color); margin: -20px -20px 20px -20px; border-bottom: 1px solid var(--border-color); }
+        .form-row { display: flex; flex-wrap: wrap; margin-bottom: 15px; gap: 20px; }
+        .form-group { flex: 1; min-width: 250px; display: flex; flex-direction: column; }
+        input, textarea { padding: 10px; border: 1px solid #ccc; border-radius: 3px; font-size: 13px; width: 100%; box-sizing: border-box; font-family: inherit; }
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 5px; }
+        .checkbox-group label { display: flex; align-items: center; font-size: 13px; cursor: pointer; }
+        .checkbox-group input { width: auto; margin-right: 5px; cursor: pointer; }
+        .btn-container { text-align: center; margin-top: 30px; }
+        button { background-color: var(--primary-color); color: white; border: none; padding: 12px 30px; border-radius: 4px; cursor: pointer; margin: 0 10px; font-size: 14px;}
+        button:hover { background-color: var(--secondary-color); }
+        body.pdf-exporting .btn-container, body.pdf-exporting .top-bar { display: none !important; }
+        body.pdf-exporting .web-page { display: block !important; }
+        .risk-clause, .form-row, table { page-break-inside: avoid; }
+/* --- PDF 導出專屬壓縮樣式 (讓排版更緊湊) --- */
+        body.pdf-exporting { font-size: 12px; }
+        body.pdf-exporting .section { margin-bottom: 10px; padding: 10px; }
+        body.pdf-exporting .section-title { margin: -10px -10px 10px -10px; padding: 8px; }
+        body.pdf-exporting .form-row { margin-bottom: 8px; gap: 10px; }
+        body.pdf-exporting .risk-clause { margin-bottom: 5px; padding-bottom: 5px; }
+        body.pdf-exporting p.lang, body.pdf-exporting .instructions.lang { line-height: 1.4 !important; margin-bottom: 8px !important; }
+        body.pdf-exporting input, body.pdf-exporting textarea { padding: 6px; font-size: 12px; }
+        body.pdf-exporting h1.lang { font-size: 20px !important; margin-bottom: 0px !important; }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <select id="language-selector" onchange="changeLanguage()">
+            <option value="tc">繁體中文</option>
+            <option value="sc">简体中文</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+
+    <div id="pdf-export-container">
+        <div id="web-page-1" class="web-page active">
+
+            <div style="text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--primary-color); padding-bottom: 15px;">
+                <h1 class="lang" style="color: var(--primary-color); margin-bottom: 5px; font-size: 24px; letter-spacing: 1px;"
+                    data-tc="豐誠資產管理有限公司" 
+                    data-sc="丰诚资产管理有限公司" 
+                    data-en="Forshine Asset Management Limited">
+                    豐誠資產管理有限公司
+                </h1>
+            </div>
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2 class="lang" data-tc="客戶開戶表格" data-sc="客户开户表格" data-en="Account Opening Form">客戶開戶表格</h2>
+                <p class="lang" data-tc="（個人及聯名帳戶適用）" data-sc="（个人及联名帐户适用）" data-en="(For Individual & Joint Account)">（個人及聯名帳戶適用）</p>
+            </div>
+
+            <div class="section">
+                <div class="section-title lang" data-tc="個人資料" data-sc="个人资料" data-en="Personal Information">個人資料</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="客戶英文姓名:" data-sc="客户英文姓名:" data-en="Client English Name:">客戶英文姓名:</label>
+                        <input type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="lang" data-tc="客戶中文姓名 (先生/小姐/女士):" data-sc="客户中文姓名 (先生/小姐/女士):" data-en="Client Chinese Name (Mr./Miss/Ms.):">客戶中文姓名 (先生/小姐/女士):</label>
+                        <input type="text">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="出生日期 (日/月/年):" data-sc="出生日期 (日/月/年):" data-en="Date of Birth (DD/MM/YY):">出生日期 (日/月/年):</label>
+                        <input type="date">
+                    </div>
+                    <div class="form-group">
+                        <label class="lang" data-tc="出生地點:" data-sc="出生地点:" data-en="Place of Birth:">出生地點:</label>
+                        <input type="text">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="國籍:" data-sc="国籍:" data-en="Nationality:">國籍:</label>
+                        <input type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="lang" data-tc="香港身分證號碼:" data-sc="香港身分证号码:" data-en="HK ID No.:">香港身分證號碼:</label>
+                        <input type="text">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="證件類型:" data-sc="证件类型:" data-en="Identification Document Type:">證件類型:</label>
+                        <input type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="lang" data-tc="證件號碼:" data-sc="证件号码:" data-en="Identification Document No.:">證件號碼:</label>
+                        <input type="text">
+                    </div>
+                </div>
+<div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="(國家區號) 住宅電話號碼:" data-sc="(国家区号) 住宅电话号码:" data-en="Residential Tel No. (Country Code):">(國家區號) 住宅電話號碼:</label>
+                        <input type="tel">
+                    </div>
+                    <div class="form-group">
+                        <label class="lang" data-tc="(國家區號) 手提電話號碼:" data-sc="(国家区号) 手提电话号码:" data-en="Mobile Phone No. (Country Code):">(國家區號) 手提電話號碼:</label>
+                        <input type="tel">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="電郵:" data-sc="电邮:" data-en="E-mail:">電郵:</label>
+                        <input type="email">
+                    </div>
+                    <div class="form-group">
+                        <label class="lang" data-tc="傳真號碼:" data-sc="传真号码:" data-en="Fax No.:">傳真號碼:</label>
+                        <input type="tel">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex: 100%;">
+                        <label class="lang" data-tc="住宅地址:" data-sc="住宅地址:" data-en="Residential Address:">住宅地址:</label>
+                        <textarea rows="2" style="width: 100%;"></textarea>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex: 100%;">
+                        <label class="lang" data-tc="通訊地址 (如與住宅地址不同):" data-sc="通讯地址 (如与住宅地址不同):" data-en="Correspondence Address (if different from Residential Address):">通訊地址 (如與住宅地址不同):</label>
+                        <textarea rows="2" style="width: 100%;"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="接收結單和一般函件方式 (請選擇其一):" data-sc="接收结单和一般函件方式 (请选择其一):" data-en="Statement and general correspondence sent to (please tick one):">接收結單和一般函件方式 (請選擇其一):</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="statement"> <span class="lang" data-tc="電郵" data-sc="电邮" data-en="E-mail">電郵</span></label>
+                            <label><input type="radio" name="statement"> <span class="lang" data-tc="住宅地址" data-sc="住宅地址" data-en="Residential Address">住宅地址</span></label>
+                            <label><input type="radio" name="statement"> <span class="lang" data-tc="通訊地址" data-sc="通讯地址" data-en="Correspondence Address">通訊地址</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="教育程度:" data-sc="教育程度:" data-en="Education Level:">教育程度:</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="education"> <span class="lang" data-tc="小學或以下" data-sc="小学或以下" data-en="Primary or below">小學或以下</span></label>
+                            <label><input type="radio" name="education"> <span class="lang" data-tc="中學" data-sc="中学" data-en="Secondary">中學</span></label>
+                            <label><input type="radio" name="education"> <span class="lang" data-tc="大學" data-sc="大学" data-en="Undergraduate">大學</span></label>
+                            <label><input type="radio" name="education"> <span class="lang" data-tc="碩士或以上" data-sc="硕士或以上" data-en="Postgraduate or above">碩士或以上</span></label>
+                        </div>
+                    </div>
+                </div>
+            </div> <div class="section">
+                <div class="section-title lang" data-tc="工作資料" data-sc="工作资料" data-en="Employment Information">工作資料</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="工作狀況:" data-sc="工作状况:" data-en="Employment Status:">工作狀況:</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="employment"> <span class="lang" data-tc="受僱" data-sc="受雇" data-en="Employed">受僱</span></label>
+                            <label><input type="radio" name="employment"> <span class="lang" data-tc="自僱" data-sc="自雇" data-en="Self-Employed">自僱</span></label>
+                            <label><input type="radio" name="employment"> <span class="lang" data-tc="退休" data-sc="退休" data-en="Retired">退休</span></label>
+                            <label><input type="radio" name="employment"> <span class="lang" data-tc="學生" data-sc="学生" data-en="Student">學生</span></label>
+                            <label><input type="radio" name="employment"> <span class="lang" data-tc="主婦" data-sc="主妇" data-en="Housewife">主婦</span></label>
+                            <label style="align-items: flex-start;"><input type="radio" name="employment"> <span class="lang" data-tc="其他:" data-sc="其他:" data-en="Others:">其他:</span> 
+                                <textarea rows="1" style="width: 150px; min-height: 25px; margin-left: 5px;"></textarea>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="僱主名稱:" data-sc="雇主名称:" data-en="Name of Employer:">僱主名稱:</label>
+                        <textarea rows="1"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="lang" data-tc="業務性質:" data-sc="业务性质:" data-en="Business Nature:">業務性質:</label>
+                        <textarea rows="1"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="職位:" data-sc="职位:" data-en="Position:">職位:</label>
+                        <input type="text">
+                    </div>
+                    <div class="form-group">
+                        <label class="lang" data-tc="公司電話:" data-sc="公司电话:" data-en="Company Contact:">公司電話:</label>
+                        <input type="tel">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex: 100%;">
+                        <label class="lang" data-tc="工作/營業地址:" data-sc="工作/营业地址:" data-en="Business/Office Address:">工作/營業地址:</label>
+                        <textarea rows="2" style="width: 100%;"></textarea>
+                    </div>
+                </div>
+            </div> <div class="btn-container">
+                <button type="button" class="nav-btn lang" onclick="nextPage(2)" data-tc="下一頁" data-sc="下一页" data-en="Next Page">下一頁</button>
+            </div>
+            
+        </div> <div id="web-page-2" class="web-page">
+<div class="section">
+                <div class="section-title lang" data-tc="財務狀況" data-sc="财务状况" data-en="Financial Status">財務狀況</div>
+                
+                <div class="form-row">
+                    <div class="form-group" style="flex: 100%;">
+                        <label class="lang" data-tc="資金來源:" data-sc="资金来源:" data-en="Source of funds:">資金來源:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="funds"> <span class="lang" data-tc="薪金" data-sc="薪金" data-en="Salary">薪金</span></label>
+                            <label><input type="checkbox" name="funds"> <span class="lang" data-tc="儲蓄" data-sc="储蓄" data-en="Saving">儲蓄</span></label>
+                            <label><input type="checkbox" name="funds"> <span class="lang" data-tc="營業溢利" data-sc="营业溢利" data-en="Business Profit">營業溢利</span></label>
+                            <label><input type="checkbox" name="funds"> <span class="lang" data-tc="遺產" data-sc="遗产" data-en="Inheritance">遺產</span></label>
+                            <label><input type="checkbox" name="funds"> <span class="lang" data-tc="投資" data-sc="投资" data-en="Investment">投資</span></label>
+                            <label><input type="checkbox" name="funds"> <span class="lang" data-tc="租金收入" data-sc="租金收入" data-en="Rental Income">租金收入</span></label>
+                            <label style="align-items: flex-start;"><input type="checkbox" name="funds"> <span class="lang" data-tc="其他(請註明):" data-sc="其他(请注明):" data-en="Others:">其他(請註明):</span>
+                                <textarea rows="1" style="width: 150px; min-height: 25px; margin-left: 5px;"></textarea>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="總年收入(港元):" data-sc="总年收入(港元):" data-en="Total Annual Income (HK$):">總年收入(港元):</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="income"> <span class="lang" data-tc="少於 500,000" data-sc="少于 500,000" data-en="Under 500,000">少於 500,000</span></label>
+                            <label><input type="radio" name="income"> <span class="lang" data-tc="500,001 - 1,500,000" data-sc="500,001 - 1,500,000" data-en="500,001 - 1,500,000">500,001 - 1,500,000</span></label>
+                            <label><input type="radio" name="income"> <span class="lang" data-tc="1,500,001 - 2,500,000" data-sc="1,500,001 - 2,500,000" data-en="1,500,001 - 2,500,000">1,500,001 - 2,500,000</span></label>
+                            <label><input type="radio" name="income"> <span class="lang" data-tc="超過 2,500,001" data-sc="超过 2,500,001" data-en="Over 2,500,001">超過 2,500,001</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="資產淨值(港元) (資產減去負債):" data-sc="资产净值(港元) (资产减去负债):" data-en="Net Worth(HK$) (Asset minus Liabilities):">資產淨值(港元) (資產減去負債):</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="networth"> <span class="lang" data-tc="少於 HK$2,000,000" data-sc="少于 HK$2,000,000" data-en="Under HK$2,000,000">少於 HK$2,000,000</span></label>
+                            <label><input type="radio" name="networth"> <span class="lang" data-tc="2,000,001 - 4,000,000" data-sc="2,000,001 - 4,000,000" data-en="2,000,001 - 4,000,000">2,000,001 - 4,000,000</span></label>
+                            <label><input type="radio" name="networth"> <span class="lang" data-tc="4,000,001 - 8,000,000" data-sc="4,000,001 - 8,000,000" data-en="4,000,001 - 8,000,000">4,000,001 - 8,000,000</span></label>
+                            <label><input type="radio" name="networth"> <span class="lang" data-tc="超過 8,000,001" data-sc="超过 8,000,001" data-en="Over 8,000,001">超過 8,000,001</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="lang" data-tc="投資目標:" data-sc="投资目标:" data-en="Investment Objective:">投資目標:</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="objective"> <span class="lang" data-tc="保本" data-sc="保本" data-en="Capital Preservation">保本</span></label>
+                            <label><input type="checkbox" name="objective"> <span class="lang" data-tc="資本增值" data-sc="资本增值" data-en="Capital Growth">資本增值</span></label>
+                            <label><input type="checkbox" name="objective"> <span class="lang" data-tc="股息" data-sc="股息" data-en="Dividend">股息</span></label>
+                            <label><input type="checkbox" name="objective"> <span class="lang" data-tc="投機" data-sc="投机" data-en="Speculation">投機</span></label>
+                            <label><input type="checkbox" name="objective"> <span class="lang" data-tc="對沖" data-sc="对冲" data-en="Hedging">對沖</span></label>
+                            <label style="align-items: flex-start;"><input type="checkbox" name="objective"> <span class="lang" data-tc="其他(請註明):" data-sc="其他(请注明):" data-en="Others:">其他(請註明):</span>
+                                <textarea rows="1" style="width: 150px; min-height: 25px; margin-left: 5px;"></textarea>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 20px;">
+                    <div class="form-group" style="flex: 100%;">
+                        <label class="lang" data-tc="您曾否宣佈破產?" data-sc="您曾否宣布破产?" data-en="Have you ever Declared Bankruptcy?">您曾否宣佈破產?</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="bankruptcy"> <span class="lang" data-tc="否" data-sc="否" data-en="No">否</span></label>
+                            <label><input type="radio" name="bankruptcy"> <span class="lang" data-tc="是" data-sc="是" data-en="Yes">是</span></label>
+                        </div>
+                        <div class="instructions" style="margin-top: 10px;">
+                            <span class="lang" data-tc="請提供解除破產日期和撤銷破產的證明文件" data-sc="请提供解除破产日期和撤销破产的证明文件" data-en="If yes, provide the discharged date and the proof of discharged documents.">請提供解除破產日期和撤銷破產的證明文件</span><br>
+                            <span class="lang" data-tc="*請注意,若現在仍為破產狀態,本公司將不能接受您的開戶申請" data-sc="*请注意,若现在仍为破产状态,本公司将不能接受您的开户申请" data-en="*Please note that if you still have a status of bankruptcy, Forshine will not accept your account application." style="color: var(--primary-color);">*請注意,若現在仍為破產狀態,本公司將不能接受您的開戶申請</span>
+                        </div>
+                        <textarea class="lang-placeholder" data-tc-placeholder="解除破產日期及詳情" data-sc-placeholder="解除破产日期及详情" data-en-placeholder="Discharged Date & Details" rows="1" placeholder="解除破產日期及詳情" style="margin-top: 10px; width: 100%;"></textarea>
+                    </div>
+                </div>
+            </div> <div class="section">
+                <div class="section-title lang" data-tc="身份聲明及其他資料披露" data-sc="身份声明及其他资料披露" data-en="Identity Declaration and Other Disclosures">身份聲明及其他資料披露</div>
+                
+                <div class="form-row">
+                    <div class="form-group" style="flex: 100%;">
+                        <label class="lang" data-tc="1. 您是否為帳戶的最終實際權益擁有人?" data-sc="1. 您是否为帐户的最终实际权益拥有人?" data-en="1. Are you the ultimate beneficial owner of the account?">1. 您是否為帳戶的最終實際權益擁有人?</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="ubo"> <span class="lang" data-tc="是" data-sc="是" data-en="Yes">是</span></label>
+                            <label><input type="radio" name="ubo"> <span class="lang" data-tc="否 (請在下方填寫詳情)" data-sc="否 (请在下方填写详情)" data-en="No (Please provide details below)">否 (請在下方填寫詳情)</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row" style="background-color: #f9f9f9; padding: 15px; border-radius: 4px; border: 1px dashed #ccc;">
+                    <div class="form-group" style="flex: 100%; margin-bottom: 10px;">
+                        <strong class="lang" data-tc="帳戶的最終實益擁有人是:" data-sc="帐户的最终实益拥有人是:" data-en="The ultimate beneficial owner in relation to this account is:">帳戶的最終實益擁有人是:</strong>
+                    </div>
+                    <div class="form-row" style="width: 100%;">
+                        <div class="form-group">
+                            <label class="lang" data-tc="姓名:" data-sc="姓名:" data-en="Name:">姓名:</label>
+                            <textarea rows="1"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="lang" data-tc="身份證/護照號碼:" data-sc="身份证/护照号码:" data-en="ID/Passport No.:">身份證/護照號碼:</label>
+                            <input type="text">
+                        </div>
+                    </div>
+                    <div class="form-row" style="width: 100%;">
+                        <div class="form-group">
+                            <label class="lang" data-tc="出生日期:" data-sc="出生日期:" data-en="Date of Birth:">出生日期:</label>
+                            <input type="date">
+                        </div>
+                        <div class="form-group">
+                            <label class="lang" data-tc="簽發國家:" data-sc="签发国家:" data-en="Country of Issue:">簽發國家:</label>
+                            <input type="text">
+                        </div>
+                    </div>
+                    <div class="form-row" style="width: 100%;">
+                        <div class="form-group">
+                            <label class="lang" data-tc="(國家區號) 電話號碼:" data-sc="(国家区号) 电话号码:" data-en="(Country Code) Phone Number:">(國家區號) 電話號碼:</label>
+                            <input type="tel">
+                        </div>
+                        <div class="form-group">
+                            <label class="lang" data-tc="關係:" data-sc="关系:" data-en="Relationship:">關係:</label>
+                            <input type="text">
+                        </div>
+                    </div>
+                    <div class="form-row" style="width: 100%;">
+                        <div class="form-group" style="flex: 100%;">
+                            <label class="lang" data-tc="住宅地址:" data-sc="住宅地址:" data-en="Residential Address:">住宅地址:</label>
+                            <textarea rows="2" style="width: 100%;"></textarea>
+                        </div>
+                    </div>
+                    <div class="instructions lang" style="width: 100%;" data-tc="請提供最終實際受益擁有人的身份證明文件和有效的地址證明。" data-sc="请提供最终实际受益拥有人的身份证明文件和有效的地址证明。" data-en="Please provide identification document and valid address proof of the ultimate beneficial owner.">
+                        請提供最終實際受益擁有人的身份證明文件和有效的地址證明。
+                    </div>
+                </div>
+            </div> <div class="btn-container">
+                <button type="button" class="nav-btn lang" onclick="prevPage(1)" style="background-color: #95a5a6; margin-right: 15px;" data-tc="上一頁" data-sc="上一页" data-en="Previous Page">上一頁</button>
+                <button type="button" class="nav-btn lang" onclick="nextPage(3)" data-tc="下一頁" data-sc="下一页" data-en="Next Page">下一頁</button>
+            </div>
+
+        </div> <div id="web-page-3" class="web-page">
+<div class="section">
+                <div class="form-row">
+                    <div class="form-group" style="flex: 100%;">
+                        <label class="lang" data-tc="2. 您及/或任何之最終賬戶受益人是否與豐誠資產管理有限公司(“豐誠”)及其附屬或聯營公司之僱員/董事有任何關係?" data-sc="2. 您及/或任何之最终账户受益人是否与丰诚资产管理有限公司(“丰诚”)及其附属或联营公司之雇员/董事有任何关系?" data-en="2. Are you and/or any of the ultimate beneficial owner(s) of the Account related to any employee or director of Forshine Asset Management Limited (&#34;Forshine&#34;) or any of its subsidiaries or associated companies?">2. 您及/或任何之最終賬戶受益人是否與豐誠資產管理有限公司(“豐誠”)及其附屬或聯營公司之僱員/董事有任何關係?</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="rel_forshine"> <span class="lang" data-tc="否" data-sc="否" data-en="No">否</span></label>
+                            <label><input type="radio" name="rel_forshine"> <span class="lang" data-tc="是 (如是,請說明)" data-sc="是 (如是,请说明)" data-en="Yes (If yes, please specify)">是 (如是,請說明)</span></label>
+                        </div>
+                        <div style="display: flex; gap: 15px; margin-top: 10px;">
+                            <textarea class="lang-placeholder" data-tc-placeholder="僱員或董事姓名" data-sc-placeholder="雇员或董事姓名" data-en-placeholder="Name of Employee/Director" rows="1" placeholder="僱員或董事姓名" style="flex: 1;"></textarea>
+                            <textarea class="lang-placeholder" data-tc-placeholder="關係" data-sc-placeholder="关系" data-en-placeholder="Relationship" rows="1" placeholder="關係" style="flex: 1;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 20px;">
+                    <div class="form-group" style="flex: 100%;">
+                        <label class="lang" data-tc="3. 您是否向賬戶最終負責發出指示的人士?" data-sc="3. 您是否向账户最终负责发出指示的人士?" data-en="3. Are you the person ultimately responsible for originating instructions for the account?">3. 您是否向賬戶最終負責發出指示的人士?</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="origin_inst"> <span class="lang" data-tc="是" data-sc="是" data-en="Yes">是</span></label>
+                            <label><input type="radio" name="origin_inst"> <span class="lang" data-tc="否,請註明" data-sc="否,请注明" data-en="No, please specify">否,請註明</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row" style="background-color: #f9f9f9; padding: 15px; border-radius: 4px; border: 1px dashed #ccc; margin-bottom: 20px;">
+                    <div class="form-group" style="flex: 100%; margin-bottom: 10px;">
+                        <strong class="lang" data-tc="最終負責向賬戶發出指示的人士是:" data-sc="最终负责向账户发出指示的人士是:" data-en="The person ultimately responsible for originating instructions for the account is:">最終負責向賬戶發出指示的人士是:</strong>
+                    </div>
+                    <div class="form-row" style="width: 100%;">
+                        <div class="form-group">
+                            <label class="lang" data-tc="姓名:" data-sc="姓名:" data-en="Name:">姓名:</label>
+                            <textarea rows="1"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="lang" data-tc="身份證/護照號碼:" data-sc="身份证/护照号码:" data-en="ID/Passport No.:">身份證/護照號碼:</label>
+                            <input type="text">
+                        </div>
+                    </div>
+                    <div class="form-row" style="width: 100%;">
+                        <div class="form-group">
+                            <label class="lang" data-tc="出生日期:" data-sc="出生日期:" data-en="Date of Birth:">出生日期:</label>
+                            <input type="date">
+                        </div>
+                        <div class="form-group">
+                            <label class="lang" data-tc="簽發國家:" data-sc="签发国家:" data-en="Country of Issue:">簽發國家:</label>
+                            <input type="text">
+                        </div>
+                    </div>
+                    <div class="form-row" style="width: 100%;">
+                        <div class="form-group">
+                            <label class="lang" data-tc="(國家區號) 電話號碼:" data-sc="(国家区号) 电话号码:" data-en="(Country Code) Phone Number:">(國家區號) 電話號碼:</label>
+                            <input type="tel">
+                        </div>
+                        <div class="form-group">
+                            <label class="lang" data-tc="關係:" data-sc="关系:" data-en="Relationship:">關係:</label>
+                            <textarea rows="1"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row" style="width: 100%;">
+                        <div class="form-group" style="flex: 100%;">
+                            <label class="lang" data-tc="住宅地址:" data-sc="住宅地址:" data-en="Residential Address:">住宅地址:</label>
+                            <textarea rows="2" style="width: 100%;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex: 100%;">
+                        <label class="lang" data-tc="4. 您是否證監會發牌或註冊人士或該人士之董事或僱員?" data-sc="4. 您是否证监会发牌或注册人士或该人士之董事或雇员?" data-en="4. Are you a person, or a director or an employee of an entity, licensed or registered with the Securities & Futures Commission?">4. 您是否證監會發牌或註冊人士或該人士之董事或僱員?</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="sfc_licensed"> <span class="lang" data-tc="否" data-sc="否" data-en="No">否</span></label>
+                            <label><input type="radio" name="sfc_licensed"> <span class="lang" data-tc="是,請填寫詳情並提供僱主同意書" data-sc="是,请填写详情并提供雇主同意书" data-en="Yes, please provide details and employer's consent letter">是,請填寫詳情並提供僱主同意書</span></label>
+                        </div>
+                        <div style="display: flex; gap: 15px; margin-top: 10px;">
+                            <textarea class="lang-placeholder" data-tc-placeholder="僱主名稱" data-sc-placeholder="雇主名称" data-en-placeholder="Name of Employer" rows="1" placeholder="僱主名稱" style="flex: 1;"></textarea>
+                            <textarea class="lang-placeholder" data-tc-placeholder="僱主證監會中央編號" data-sc-placeholder="雇主证监会中央编号" data-en-placeholder="CE Number of Employer" rows="1" placeholder="僱主證監會中央編號" style="flex: 1;"></textarea>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <span class="lang" data-tc="提供僱主的同意書:" data-sc="提供雇主的同意书:" data-en="Provide the consent letter:">提供僱主的同意書:</span>
+                            <label style="margin-left: 10px;"><input type="radio" name="q4_consent"> <span class="lang" data-tc="有" data-sc="有" data-en="Yes">有</span></label>
+                            <label style="margin-left: 10px;"><input type="radio" name="q4_consent"> <span class="lang" data-tc="否" data-sc="否" data-en="No">否</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 20px;">
+                    <div class="form-group" style="flex: 100%;">
+                        <label class="lang" data-tc="5. 您是否豐誠之僱員或董事或與豐誠之任何僱員或董事有親屬關係?" data-sc="5. 您是否丰诚之雇员或董事或与丰诚之任何雇员或董事有亲属关系?" data-en="5. Are you an employee or director of Forshine or related to any employee or director of Forshine?">5. 您是否豐誠之僱員或董事或與豐誠之任何僱員或董事有親屬關係?</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="emp_forshine"> <span class="lang" data-tc="否" data-sc="否" data-en="No">否</span></label>
+                            <label><input type="radio" name="emp_forshine"> <span class="lang" data-tc="是,請您填寫關係類別:" data-sc="是,请您填写关系类别:" data-en="Yes, please provide the category of the relationship:">是,請您填寫關係類別:</span></label>
+                        </div>
+                        <div style="display: flex; gap: 15px; margin-top: 10px;">
+                            <textarea class="lang-placeholder" data-tc-placeholder="僱員或董事姓名" data-sc-placeholder="雇员或董事姓名" data-en-placeholder="Name of Employee/Director" rows="1" placeholder="僱員或董事姓名" style="flex: 1;"></textarea>
+                            <textarea class="lang-placeholder" data-tc-placeholder="關係" data-sc-placeholder="关系" data-en-placeholder="Relationship" rows="1" placeholder="關係" style="flex: 1;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 20px;">
+                    <div class="form-group" style="flex: 100%;">
+                        <label class="lang" data-tc="6. 您是否股票/期貨交易所參與者或於證監會註冊之人士/代表或獲豁免註冊人士/代表之雇員?" data-sc="6. 您是否股票/期货交易所参与者或于证监会注册之人士/代表或获豁免注册人士/代表之雇员?" data-en="6. Are you an employee of any participant of a Stock/Futures Exchange or a registered person/representative with the Securities and Futures Commission or an exempt licensed person/representative?">6. 您是否股票/期貨交易所參與者或於證監會註冊之人士/代表或獲豁免註冊人士/代表之雇員?</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="exchange_participant"> <span class="lang" data-tc="否" data-sc="否" data-en="No">否</span></label>
+                            <label><input type="radio" name="exchange_participant"> <span class="lang" data-tc="是 (如是,請說明)" data-sc="是 (如是,请说明)" data-en="Yes (If yes, please specify)">是 (如是,請說明)</span></label>
+                        </div>
+                        <div style="display: flex; gap: 15px; margin-top: 10px;">
+                            <textarea class="lang-placeholder" data-tc-placeholder="參與者名稱" data-sc-placeholder="参与者名称" data-en-placeholder="Participant Name" rows="1" placeholder="參與者名稱" style="flex: 1;"></textarea>
+                            <textarea class="lang-placeholder" data-tc-placeholder="職位 / 中央編號" data-sc-placeholder="职位 / 中央编号" data-en-placeholder="Position / CE No." rows="1" placeholder="職位 / 中央編號" style="flex: 1;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 20px;">
+                    <div class="form-group" style="flex: 100%;">
+                        <label class="lang" style="line-height: 1.5;" data-tc="7. 您及/或您的配偶,伴侶,子女或父母...是否在任何地方擔任或曾擔任重要公職 (“政治人物”)?" data-sc="7. 您及/或您的配偶,伴侣,子女或父母...是否在任何地方担任或曾担任重要公职 (“政治人物”)?" data-en="7. Have you and/or your spouse, partner, children, parents, spouse or partner of your children or close associates been entrusted with prominent public function in any place... (&#34;politically exposed person&#34;)?">7. 您及/或您的配偶,伴侶,子女或父母...是否在任何地方擔任或曾擔任重要公職 (“政治人物”)?</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="pep"> <span class="lang" data-tc="否" data-sc="否" data-en="No">否</span></label>
+                            <label><input type="radio" name="pep"> <span class="lang" data-tc="是,請述明:" data-sc="是,请述明:" data-en="Yes, please specify:">是,請述明:</span></label>
+                        </div>
+                        <table style="margin-top: 10px; width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <th class="lang" data-tc="政治人物姓名" data-sc="政治人物姓名" data-en="Name of PEP" style="border: 1px solid #ccc; padding: 5px;">政治人物姓名</th>
+                                <th class="lang" data-tc="政治人物職位" data-sc="政治人物职位" data-en="Position of PEP" style="border: 1px solid #ccc; padding: 5px;">政治人物職位</th>
+                                <th class="lang" data-tc="政治人物所屬國家" data-sc="政治人物所属国家" data-en="Country the PEP belongs" style="border: 1px solid #ccc; padding: 5px;">政治人物所屬國家</th>
+                                <th class="lang" data-tc="政治人物與你之關係" data-sc="政治人物与你之关系" data-en="PEP relationship with you" style="border: 1px solid #ccc; padding: 5px;">政治人物與你之關係</th>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ccc; padding: 5px;"><textarea rows="1" style="width: 100%; border: none; background: transparent; padding: 0; min-height: 20px; box-sizing: border-box;"></textarea></td>
+                                <td style="border: 1px solid #ccc; padding: 5px;"><textarea rows="1" style="width: 100%; border: none; background: transparent; padding: 0; min-height: 20px; box-sizing: border-box;"></textarea></td>
+                                <td style="border: 1px solid #ccc; padding: 5px;"><textarea rows="1" style="width: 100%; border: none; background: transparent; padding: 0; min-height: 20px; box-sizing: border-box;"></textarea></td>
+                                <td style="border: 1px solid #ccc; padding: 5px;"><textarea rows="1" style="width: 100%; border: none; background: transparent; padding: 0; min-height: 20px; box-sizing: border-box;"></textarea></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="form-row" style="margin-top: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="lang" data-tc="8. 您或您的配偶是否控制或共同控制任何豐誠的公司客戶35%或以上的表決權或股權?" data-sc="8. 您或您的配偶是否控制或共同控制任何丰诚的公司客户35%或以上的表决权或股权?" data-en="8. Do you or your spouse control or together control 35% or more of the voting rights or issued shares of any corporate client of Forshine?">8. 您或您的配偶是否控制或共同控制任何豐誠的公司客戶35%或以上的表決權或股權?</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="control_35"> <span class="lang" data-tc="否" data-sc="否" data-en="No">否</span></label>
+                            <label style="align-items: flex-start;"><input type="radio" name="control_35"> <span class="lang" data-tc="是,請註明:" data-sc="是,请注明:" data-en="Yes, please specify:">是,請註明:</span> 
+                                <textarea rows="1" style="width: 200px; min-height: 25px; margin-left: 5px;"></textarea>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row" style="margin-top: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="lang" data-tc="9. 您或您的配偶是否是任何上市公司的董事或高級管理人員?" data-sc="9. 您或您的配偶是否是任何上市公司的董事或高级管理人员?" data-en="9. Are you or your spouse the director or senior management of any listed company?">9. 您或您的配偶是否是任何上市公司的董事或高級管理人員?</label>
+                        <div class="checkbox-group">
+                            <label><input type="radio" name="listed_dir"> <span class="lang" data-tc="否" data-sc="否" data-en="No">否</span></label>
+                            <label style="align-items: flex-start;"><input type="radio" name="listed_dir"> <span class="lang" data-tc="是,請註明:" data-sc="是,请注明:" data-en="Yes, please specify:">是,請註明:</span> 
+                                <textarea rows="1" style="width: 200px; min-height: 25px; margin-left: 5px;"></textarea>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <div class="btn-container">
+                <button type="button" class="nav-btn lang" onclick="prevPage(2)" style="background-color: #95a5a6; margin-right: 15px;" data-tc="上一頁" data-sc="上一页" data-en="Previous Page">上一頁</button>
+                <button type="button" class="nav-btn lang" onclick="nextPage(4)" data-tc="下一頁" data-sc="下一页" data-en="Next Page">下一頁</button>
+            </div>
+
+        </div> <div id="web-page-4" class="web-page">
+<div class="section">
+                <div class="section-title lang" data-tc="客戶聲明" data-sc="客户声明" data-en="Client's Declaration">客戶聲明</div>
+                
+                <div class="notes-section" style="background-color: #fcf3cf; border-left: 4px solid #f1c40f; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 0; margin-bottom: 10px;"
+                       data-tc="本人/吾等的簽署,代表該資訊是真實,完整和正確的,除非豐誠資產管理有限公司收到客戶任何資料變更的書面通知,否則該公司有權完全依賴以上資訊及陳述來提供全權委託的投資管理服務或投資諮詢服務。本人/吾等授權豐誠資產管理有限公司可隨時就核對本客戶開戶表格事宜,與任何人包括吾等之銀行、經紀或任何信用機構進行諮詢。"
+                       data-sc="本人/吾等的签署,代表该资讯是真实,完整和正确的,除非丰诚资产管理有限公司收到客户任何资料变更的书面通知,否则该公司有权完全依赖以上资讯及陈述来提供全权委托的投资管理服务或投资咨询服务。本人/吾等授权丰诚资产管理有限公司可随时就核对本客户开户表格事宜,与任何人包括吾等之银行、经纪或任何信用机构进行咨询。"
+                       data-en="I/We, the undersigned, represent that the information is true, complete and correct and Forshine Asset Management Limited is entitled to rely fully on such information and representations to provide discretionary investment management service or investment advisory service, unless it receives notice in writing of any change. Forshine Asset Management Limited is authorized at any time to contact anyone, including our banks, brokers or any credit agency, for the purpose of verifying the information provided in this Account Opening Form.">
+                        本人/吾等的簽署,代表該資訊是真實,完整和正確的,除非豐誠資產管理有限公司收到客戶任何資料變更的書面通知,否則該公司有權完全依賴以上資訊及陳述來提供全權委託的投資管理服務或投資諮詢服務。本人/吾等授權豐誠資產管理有限公司可隨時就核對本客戶開戶表格事宜,與任何人包括吾等之銀行、經紀或任何信用機構進行諮詢。
+                    </p>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-bottom: 0;"
+                       data-tc="本人/吾等明白本人/吾等遞交此表格及豐誠資產管理有限公司接納此表格並非表示豐誠資產管理有限公司同意開立帳戶,並清楚豐誠資產管理有限公司保留拒絕本人/吾等開戶申請之權力。"
+                       data-sc="本人/吾等明白本人/吾等递交此表格及丰诚资产管理有限公司接纳此表格并非表示丰诚资产管理有限公司同意开立帐户,并清楚丰诚资产管理有限公司保留拒绝本人/吾等开户申请之权力。"
+                       data-en="I/We understand that my/our submission of this account opening form and the acceptance of this account opening form by Forshine Asset Management Limited in no way implies approval for opening of an account for me/us and that Forshine Asset Management Limited may reserve the right to reject my/our application.">
+                        本人/吾等明白本人/吾等遞交此表格及豐誠資產管理有限公司接納此表格並非表示豐誠資產管理有限公司同意開立帳戶,並清楚豐誠資產管理有限公司保留拒絕本人/吾等開戶申請之權力。
+                    </p>
+                </div>
+
+                <table style="width: 100%; margin-top: 20px; page-break-inside: avoid; border-collapse: collapse;">
+                    <tr>
+                        <th class="lang" width="50%" style="background-color: var(--highlight-bg); color: var(--primary-color); border: 1px solid #ccc; padding: 10px;"
+                            data-tc="個人/聯名帳戶第一申請人簽署" data-sc="个人/联名帐户第一申请人签署" data-en="Signature of Individual/ First Applicant">個人/聯名帳戶第一申請人簽署</th>
+                        <th class="lang" width="50%" style="background-color: var(--highlight-bg); color: var(--primary-color); border: 1px solid #ccc; padding: 10px;"
+                            data-tc="聯名帳戶第二申請人簽署" data-sc="联名帐户第二申请人签署" data-en="Signature of Second Applicant">聯名帳戶第二申請人簽署</th>
+                    </tr>
+                    <tr>
+                        <td class="lang" style="height: 120px; vertical-align: bottom; text-align: center; color: #ccc; border: 1px solid #ccc;"
+                            data-tc="[請在此處簽署]" data-sc="[请在此处签署]" data-en="[Please sign here]">[請在此處簽署]</td>
+                        <td class="lang" style="height: 120px; vertical-align: bottom; text-align: center; color: #ccc; border: 1px solid #ccc;"
+                            data-tc="[請在此處簽署]" data-sc="[请在此处签署]" data-en="[Please sign here]">[請在此處簽署]</td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #ccc; padding: 10px;">
+                            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                <span class="lang" style="white-space: nowrap; margin-right: 10px; font-size: 13px;" data-tc="姓名:" data-sc="姓名:" data-en="Signed By:">姓名:</span>
+                                <textarea rows="1" style="flex: 1; min-height: 25px; padding: 5px; margin: 0;"></textarea>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <span class="lang" style="white-space: nowrap; margin-right: 10px; font-size: 13px;" data-tc="日期:" data-sc="日期:" data-en="Date:">日期:</span>
+                                <input type="date" style="flex: 1; padding: 5px; margin: 0;">
+                            </div>
+                        </td>
+                        <td style="border: 1px solid #ccc; padding: 10px;">
+                            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                <span class="lang" style="white-space: nowrap; margin-right: 10px; font-size: 13px;" data-tc="姓名:" data-sc="姓名:" data-en="Signed By:">姓名:</span>
+                                <textarea rows="1" style="flex: 1; min-height: 25px; padding: 5px; margin: 0;"></textarea>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <span class="lang" style="white-space: nowrap; margin-right: 10px; font-size: 13px;" data-tc="日期:" data-sc="日期:" data-en="Date:">日期:</span>
+                                <input type="date" style="flex: 1; padding: 5px; margin: 0;">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <div style="border: 1px solid var(--border-color); padding: 15px; margin-top: 20px; border-radius: 4px; page-break-inside: avoid;">
+                    <h4 class="lang" style="margin-top: 0; margin-bottom: 15px; text-align: left; color: var(--primary-color);" data-tc="見證人簽署" data-sc="见证人签署" data-en="Signature of Witness">見證人簽署</h4>
+                    
+                    <div class="lang" style="height: 80px; border: 1px dashed #ccc; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: #aaa;" data-tc="[見證人簽署區]" data-sc="[见证人签署区]" data-en="[Witness Signature]">[見證人簽署區]</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="lang" data-tc="見證人*姓名:" data-sc="见证人*姓名:" data-en="Name of Witness*:">見證人*姓名:</label>
+                            <textarea rows="1"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="lang" data-tc="執照/註冊號:" data-sc="执照/注册号:" data-en="License/Registration No.:">執照/註冊號:</label>
+                            <textarea rows="1"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="lang" data-tc="職位:" data-sc="职位:" data-en="Capacity:">職位:</label>
+                            <textarea rows="1"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="lang" data-tc="電話號碼:" data-sc="电话号码:" data-en="Phone No.:">電話號碼:</label>
+                            <input type="tel">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 100%;">
+                            <label class="lang" data-tc="地址:" data-sc="地址:" data-en="Address:">地址:</label>
+                            <textarea rows="2" style="width: 100%;"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 100%;">
+                            <label class="lang" data-tc="日期:" data-sc="日期:" data-en="Date:">日期:</label>
+                            <input type="date">
+                        </div>
+                    </div>
+                    
+                    <div class="instructions lang" style="margin-top: 15px; font-size: 12px; color: #666;" 
+                         data-tc="* 見證人應為持牌或註冊人、持牌人或註冊人的聯繫人士、太平紳士或專業人士例如執業會計師、特許秘書、律師或公證人。(根據《操守準則》第5.1(a)段)" 
+                         data-sc="* 见证人应为持牌或注册人、持牌人或注册人的联系人士、太平绅士或专业人士例如执业会计师、特许秘书、律师或公证人。(根据《操守准则》第5.1(a)段)" 
+                         data-en="* Witness should be a licensed or registered person, an affiliate of a licensed or registered person, a Justice of the Peace, or a professional person such as certified public accountant, chartered secretary, lawyer or notary public. (according to paragraph 5.1(a) of the Code of Conduct)">
+                        * 見證人應為持牌或註冊人、持牌人或註冊人的聯繫人士、太平紳士或專業人士例如執業會計師、特許秘書、律師或公證人。(根據《操守準則》第5.1(a)段)
+                    </div>
+                </div>
+
+            </div> <div class="btn-container">
+                <button type="button" class="nav-btn lang" onclick="prevPage(3)" style="background-color: #95a5a6; margin-right: 15px;" data-tc="上一頁" data-sc="上一页" data-en="Previous Page">上一頁</button>
+                <button type="button" class="nav-btn lang" onclick="nextPage(5)" data-tc="下一頁" data-sc="下一页" data-en="Next Page">下一頁</button>
+            </div>
+
+        </div> <div id="web-page-5" class="web-page">
+<div class="section">
+                <div class="section-title lang" data-tc="風險披露" data-sc="风险披露" data-en="RISK DISCLOSURE">風險披露</div>
+                
+                <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-bottom: 20px;"
+                   data-tc="【客戶】確認【本公司】已經邀請【客戶】閱讀以下之風險披露聲明,提出問題及徵求獨立的意見。"
+                   data-sc="【客户】确认【本公司】已经邀请【客户】阅读以下之风险披露声明,提出问题及征求独立的意见。"
+                   data-en="The Client acknowledges that the Client has been invited to read the following Risk Disclosure Statement, and to ask questions and to take professional and independent legal advice, if the Client so wished.">
+                    【客戶】確認【本公司】已經邀請【客戶】閱讀以下之風險披露聲明,提出問題及徵求獨立的意見。
+                </p>
+
+                <div class="risk-clause" style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #eee;">
+                    <strong class="lang" style="font-size: 14px; color: var(--primary-color);" 
+                            data-tc="1. 買賣證券之風險:" 
+                            data-sc="1. 买卖证券之风险:" 
+                            data-en="1. Risk of securities trading:">1. 買賣證券之風險:</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px;"
+                       data-tc="證券價格可能會非常波動。個別證券價格可升可跌,甚至變為毫無價值。買賣證券未必一定能夠取得盈利,反而可能招致損失。"
+                       data-sc="证券价格可能会非常波动。个别证券价格可升可跌,甚至变为毫无价值。买卖证券未必一定能够取得盈利,反而可能招致损失。"
+                       data-en="The prices of securities fluctuate, sometimes dramatically. The price of a security may move up or down, and may become valueless. It is as likely that losses will be incurred rather than profit made as a result of buying and selling securities.">
+                        證券價格可能會非常波動。個別證券價格可升可跌,甚至變為毫無價值。買賣證券未必一定能夠取得盈利,反而可能招致損失。
+                    </p>
+                </div>
+
+                <div class="risk-clause" style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #eee;">
+                    <strong class="lang" style="font-size: 14px; color: var(--primary-color);" 
+                            data-tc="2. 買賣創業板股份之風險:" 
+                            data-sc="2. 买卖创业板股份之风险:" 
+                            data-en="2. Risk of trading Growth Enterprise Market Stocks:">2. 買賣創業板股份之風險:</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px;"
+                       data-tc="創業板股份涉及高投資風險。尤其是該等公司可在無須具備盈利往績及無須預測未來盈利的情況下在創業板上市。創業板股份可能非常波動及流通性很低。【客戶】應經過審慎及仔細考慮之後,才作出有關的投資決定。創業板市場的較高風險性質及其他特點,意味著這個市場較適合專業及其他熟悉投資技巧的投資者。現時有關創業板股份之最新資料,只可以在香港交易所操作之互聯網網站上找到。創業板上市公司一般無須在憲報刊登付費公告。假如【客戶】不肯定或不理解本風險披露聲明任何方面或買賣創業板股份所牽涉之性質及風險,應尋求獨立專業意見。"
+                       data-sc="创业板股份涉及高投资风险。尤其是该等公司可在无须具备盈利往绩及无须预测未来盈利的情况下在创业板上市。创业板股份可能非常波动及流通性很低。【客户】应经过审慎及仔细考虑之后,才作出有关的投资决定。创业板市场的较高风险性质及其他特点,意味着这个市场较适合专业及其他熟悉投资技巧的投资者。现时有关创业板股份之最新资料,只可以在香港交易所操作之互联网网站上找到。创业板上市公司一般无须在宪报刊登付费公告。假如【客户】不肯定或不理解本风险披露声明任何方面或买卖创业板股份所牵涉之性质及风险,应寻求独立专业意见。"
+                       data-en="Growth Enterprises Market (the 'GEM') stocks involve a high investment risk. In particular, companies may list on the GEM with neither a track record of profitability nor any obligation to forecast future profitability. GEM stocks may be very volatile and illiquid. The Client should make the decision to invest only after due and careful consideration. The greater risk profile and other characteristics of the GEM mean that it is a market more suited to professional and other sophisticated investors. Current information on the GEM stocks may only be found on the internet website operated by the HKEx. GEM Companies are usually not required to issue paid announcements in gazetted newspapers. The Client should seek independent professional advice if the Client is uncertain of or has not understood any aspect of this risk disclosure statement or the nature and risks involved in trading of GEM stocks.">
+                        創業板股份涉及高投資風險。尤其是該等公司可在無須具備盈利往績及無須預測未來盈利的情況下在創業板上市。創業板股份可能非常波動及流通性很低。【客戶】應經過審慎及仔細考慮之後,才作出有關的投資決定。創業板市場的較高風險性質及其他特點,意味著這個市場較適合專業及其他熟悉投資技巧的投資者。現時有關創業板股份之最新資料,只可以在香港交易所操作之互聯網網站上找到。創業板上市公司一般無須在憲報刊登付費公告。假如【客戶】不肯定或不理解本風險披露聲明任何方面或買賣創業板股份所牽涉之性質及風險,應尋求獨立專業意見。
+                    </p>
+                </div>
+
+                <div class="risk-clause" style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #eee;">
+                    <strong class="lang" style="font-size: 14px; color: var(--primary-color);" 
+                            data-tc="3. 在香港以外地方收取或持有的【客戶資產】的風險:" 
+                            data-sc="3. 在香港以外地方收取或持有的【客户资产】的风险:" 
+                            data-en="3. Risks of client assets received or held outside Hong Kong:">3. 在香港以外地方收取或持有的【客戶資產】的風險:</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px;"
+                       data-tc="投資經理或代理人在香港以外地方收取或持有的【客戶資產】,是受到有關海外司法管轄區的適用法律及規例所監管的。這些法律及規例與《證券及期貨條例》(第571章)及根據該條例制訂的規則可能有所不同。因此,有關【客戶】資產將可能不會享有賦予在香港收取或持有的【客戶資產】的相同保障。"
+                       data-sc="投资经理或代理人在香港以外地方收取或持有的【客户资产】,是受到有关海外司法管辖区的适用法律及规例所监管的。这些法律及规例与《证券及期货条例》(第571章)及根据该条例制订的规则可能有所不同。因此,有关【客户】资产将可能不会享有赋予在香港收取或持有的【客户资产】的相同保障。"
+                       data-en="Client assets received or held by the Investment Management or its agents outside Hong Kong are subject to the applicable laws and regulations of the relevant overseas jurisdiction which may be different from the Securities and Futures Ordinance (Cap.571) and the rules made thereunder. Consequently, such client asserts may not enjoy the same protection as that conferred on client assets received or held in Hong Kong.">
+                        投資經理或代理人在香港以外地方收取或持有的【客戶資產】,是受到有關海外司法管轄區的適用法律及規例所監管的。這些法律及規例與《證券及期貨條例》(第571章)及根據該條例制訂的規則可能有所不同。因此,有關【客戶】資產將可能不會享有賦予在香港收取或持有的【客戶資產】的相同保障。
+                    </p>
+                </div>
+
+                <div class="risk-clause" style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #eee;">
+                    <strong class="lang" style="font-size: 14px; color: var(--primary-color);" 
+                            data-tc="4. 提供代存郵件或將郵件轉交第三方的授權書的風險:" 
+                            data-sc="4. 提供代存邮件或将邮件转交第三方的授权书的风险:" 
+                            data-en="4. Risk of providing an authority to hold mail or to direct mail to third parties:">4. 提供代存郵件或將郵件轉交第三方的授權書的風險:</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px;"
+                       data-tc="假如你向投資經理或代理人提供授權書,允許他代存郵件或將郵件轉交予第三方,那麼你便須盡速親身收取所有關於你帳戶的成交單據及結單,並加以詳細閱讀,以確保可及時偵察到任何差異或錯誤。"
+                       data-sc="假如你向投资经理或代理人提供授权书,允许他代存邮件或将邮件转交予第三方,那么你便须尽速亲身收取所有关于你帐户的成交单据及结单,并加以详细阅读,以确保可及时侦察到任何差异或错误。"
+                       data-en="If the Client provides the Investment Management or its Agents with an authority to hold mail or to direct mail to third parties, it is important for the Client to promptly collect in person all contract notes and statements of the Client's account and review them in detail to ensure that any anomalies or mistakes can be detected in a timely fashion.">
+                        假如你向投資經理或代理人提供授權書,允許他代存郵件或將郵件轉交予第三方,那麼你便須盡速親身收取所有關於你帳戶的成交單據及結單,並加以詳細閱讀,以確保可及時偵察到任何差異或錯誤。
+                    </p>
+                </div>
+
+                <div class="risk-clause" style="margin-bottom: 15px;">
+                    <strong class="lang" style="font-size: 14px; color: var(--primary-color);" 
+                            data-tc="5. 行使及買賣供股權益的風險:" 
+                            data-sc="5. 行使及买卖供股权益的风险:" 
+                            data-en="5. Risk of exercising and trading rights issue:">5. 行使及買賣供股權益的風險:</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px;"
+                       data-tc="若投資者要行使及買賣供股權益,應留意有關的期限及其他時間表。未被行使的供股權益在到期時將沒有任何價值。但若投資者決定不行使供股權益並在市場上轉讓這項權利,應留意認購期內設有指定的買賣期,在此之後供股權益將會變得毫無價值。若投資者決定放棄供股權益,其持股比例將會因公司增發新股而被攤薄。"
+                       data-sc="若投资者要行使及买卖供股权益,应留意有关的期限及其他时间表。未被行使的供股权益在到期时将没有任何价值。但若投资者决定不行使供股权益并在市场上转让这项权利,应留意认购期内设有指定的买卖期,在此之后供股权益将会变得毫无价值。若投资者决定放弃供股权益,其持股比例将会因公司增发新股而被摊薄。"
+                       data-en="For exercising and trading of the rights issue, investors have to pay attention to the deadline and other timelines. Rights issues that are not exercised will have no value upon expiry. If investors decide not to exercise the rights and sell the rights in the market, the rights must be sold during the specified trading period within the subscription period, after which they will become worthless. If investors pass up the rights, the shareholding in the expanded capital of the company will be diluted.">
+                        若投資者要行使及買賣供股權益,應留意有關的期限及其他時間表。未被行使的供股權益在到期時將沒有任何價值。但若投資者決定不行使供股權益並在市場上轉讓這項權利,應留意認購期內設有指定的買賣期,在此之後供股權益將會變得毫無價值。若投資者決定放棄供股權益,其持股比例將會因公司增發新股而被攤薄。
+                    </p>
+                </div>
+            </div> <div class="btn-container">
+                <button type="button" class="nav-btn lang" onclick="prevPage(4)" style="background-color: #95a5a6; margin-right: 15px;" data-tc="上一頁" data-sc="上一页" data-en="Previous Page">上一頁</button>
+                <button type="button" class="nav-btn lang" onclick="nextPage(6)" data-tc="下一頁" data-sc="下一页" data-en="Next Page">下一頁</button>
+            </div>
+
+        </div> <div id="web-page-6" class="web-page">
+<div class="section">
+                <div class="risk-clause" style="margin-bottom: 10px;">
+                    <strong class="lang" style="font-size: 14px; color: var(--primary-color);" 
+                            data-tc="6. 買賣交易所買賣基金的風險:" 
+                            data-sc="6. 买卖交易所买卖基金的风险:" 
+                            data-en="6. Risk of trading exchange traded funds (ETFs):">6. 買賣交易所買賣基金的風險:</strong>
+                </div>
+
+                <div class="risk-clause" style="margin-left: 15px; margin-bottom: 15px;">
+                    <strong class="lang" style="font-size: 13px; color: #444;" 
+                            data-tc="6.1 市場風險" 
+                            data-sc="6.1 市场风险" 
+                            data-en="6.1 Market risk">6.1 市場風險</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px; margin-bottom: 10px;"
+                       data-tc="交易所買賣基金主要為追蹤某些指數、行業/領域又或資產組別(如股票、債券或商品)的表現。交易所買賣基金經理可用不同策略達至目標,但通常也不能在跌市中酌情採取防守策略。投資者必須要有因為相關指數資產的波動而蒙受損失的準備。"
+                       data-sc="交易所买卖基金主要为追踪某些指数、行业/领域又或资产组别(如股票、债券或商品)的表现。交易所买卖基金经理可用不同策略达至目标,但通常也不能在跌市中酌情采取防守策略。投资者必须要有因为相关指数资产的波动而蒙受损失的准备。"
+                       data-en="ETFs are typically designed to track the performance of certain indices, market sectors, or groups of assets such as stocks, bonds, or commodities. ETF managers may use different strategies to achieve this goal, but in general they do not have the discretion to take defensive positions in declining markets. Investors must be prepared to bear the risk of loss and volatility associated with the underlying index/assets.">
+                        交易所買賣基金主要為追蹤某些指數、行業/領域又或資產組別(如股票、債券或商品)的表現。交易所買賣基金經理可用不同策略達至目標,但通常也不能在跌市中酌情採取防守策略。投資者必須要有因為相關指數資產的波動而蒙受損失的準備。
+                    </p>
+                </div>
+
+                <div class="risk-clause" style="margin-left: 15px; margin-bottom: 15px;">
+                    <strong class="lang" style="font-size: 13px; color: #444;" 
+                            data-tc="6.2 追蹤誤差" 
+                            data-sc="6.2 追踪误差" 
+                            data-en="6.2 Tracking errors">6.2 追蹤誤差</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px; margin-bottom: 10px;"
+                       data-tc="這是指交易所買賣基金的表現與相關指數/資產的表現脫節,原因可以來自交易所買賣基金的交易費及其他費用、相關指數/資產改變組合、交易所買賣基金經理的複製策略等等因素。"
+                       data-sc="这是指交易所买卖基金的表现与相关指数/资产的表现脱节,原因可以来自交易所买卖基金的交易费及其他费用、相关指数/资产改变组合、交易所买卖基金经理的复制策略等等因素。"
+                       data-en="Tracking errors refer to the disparity in performance between an ETF and its underlying index/assets. Tracking errors can arise due to factors such as the impact of transaction fees and expenses incurred to the ETF, changes in composition of the underlying index/assets, and the ETF manager's replication strategy.">
+                        這是指交易所買賣基金的表現與相關指數/資產的表現脫節,原因可以來自交易所買賣基金的交易費及其他費用、相關指數/資產改變組合、交易所買賣基金經理的複製策略等等因素。
+                    </p>
+                </div>
+
+                <div class="risk-clause" style="margin-left: 15px; margin-bottom: 15px;">
+                    <strong class="lang" style="font-size: 13px; color: #444;" 
+                            data-tc="6.3 以折讓或溢價交易" 
+                            data-sc="6.3 以折让或溢价交易" 
+                            data-en="6.3 Trading at discount or premium">6.3 以折讓或溢價交易</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px; margin-bottom: 10px;"
+                       data-tc="交易所買賣基金的價格可能會高於或低於其資產淨值,當中主要是供求因素的問題,在市場大幅波動兼變化不定期間尤其多見。"
+                       data-sc="交易所买卖基金的价格可能会高于或低于其资产净值,当中主要是供求因素的问题,在市场大幅波动兼变化不定期间尤其多见。"
+                       data-en="An ETF may be traded at a discount or premium to its Net Asset Value (NAV). This price discrepancy is caused by supply and demand factors, and may be particularly likely to emerge during periods of high market volatility and uncertainty.">
+                        交易所買賣基金的價格可能會高於或低於其資產淨值,當中主要是供求因素的問題,在市場大幅波動兼變化不定期間尤其多見。
+                    </p>
+                </div>
+
+                <div class="risk-clause" style="margin-left: 15px; margin-bottom: 15px;">
+                    <strong class="lang" style="font-size: 13px; color: #444;" 
+                            data-tc="6.4 外匯風險" 
+                            data-sc="6.4 外汇风险" 
+                            data-en="6.4 Foreign exchange risk">6.4 外匯風險</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px; margin-bottom: 10px;"
+                       data-tc="若投資者所買賣結構性產品的相關資產並非以港幣為單位,其尚要面對外匯風險。貨幣兌換率的波動可對相關資產的價值造成負面影響,連帶影響結構性產品的價格。"
+                       data-sc="若投资者所买卖结构性产品的相关资产并非以港币为单位,其尚要面对外汇风险。货币兑换率的波动可对相关资产的价值造成负面影响,连带影响结构性产品的价格。"
+                       data-en="Investors trading ETFs with underlying assets not denominated in Hong Kong dollars are also exposed to exchange rate risk. Currency rate fluctuations can adversely affect the underlying asset value, also affecting the ETF price.">
+                        若投資者所買賣結構性產品的相關資產並非以港幣為單位,其尚要面對外匯風險。貨幣兌換率的波動可對相關資產的價值造成負面影響,連帶影響結構性產品的價格。
+                    </p>
+                </div>
+
+                <div class="risk-clause" style="margin-left: 15px; margin-bottom: 15px;">
+                    <strong class="lang" style="font-size: 13px; color: #444;" 
+                            data-tc="6.5 流通量風險" 
+                            data-sc="6.5 流通量风险" 
+                            data-en="6.5 Liquidity risk">6.5 流通量風險</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px; margin-bottom: 10px;"
+                       data-tc="證券莊家是負責提供流通量、方便買賣交易所買賣基金的交易所參與者。儘管交易所買賣基金多有一個或以上的證券莊家,但若有證券莊家失責或停止履行職責,投資者或就不能進行買賣。"
+                       data-sc="证券庄家是负责提供流通量、方便买卖交易所买卖基金的交易所参与者。尽管交易所买卖基金多有一个或以上的证券庄家,但若有证券庄家失责或停止履行职责,投资者或就不能进行买卖。"
+                       data-en="Securities Market Makers (SMMs) are Exchange Participants that provide liquidity to facilitate trading in ETFs. Although most ETFs are supported by one or more SMMs, there is no assurance that active trading will be maintained.">
+                        證券莊家是負責提供流通量、方便買賣交易所買賣基金的交易所參與者。儘管交易所買賣基金多有一個或以上的證券莊家,但若有證券莊家失責或停止履行職責,投資者或就不能進行買賣。
+                    </p>
+                </div>
+
+                <div class="risk-clause" style="margin-left: 15px; margin-bottom: 15px;">
+                    <strong class="lang" style="font-size: 13px; color: #444;" 
+                            data-tc="6.6 不同複製策略涉及對手風險" 
+                            data-sc="6.6 不同复制策略涉及对手风险" 
+                            data-en="6.6 Counterparty risk involved in ETFs with different replication strategies">6.6 不同複製策略涉及對手風險</strong>
+                    
+                    <div style="margin-left: 15px; margin-top: 5px;">
+                        <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-bottom: 10px;"
+                           data-tc="<strong>i. 完全複製及選具代表性樣本策略:</strong><br>直接投資相關資產而不經第三者所發行合成複製工具的交易所買賣基金,其交易對手風險通常不是太大問題。"
+                           data-sc="<strong>i. 完全复制及选具代表性样本策略:</strong><br>直接投资相关资产而不经第三者所发行合成复制工具的交易所买卖基金,其交易对手风险通常不是太大问题。"
+                           data-en="<strong>i. Full replication and representative sampling strategies:</strong><br>For ETFs that invest directly in the underlying assets rather than through synthetic instruments issued by third parties, counterparty risk tends to be less of concern.">
+                            <strong>i. 完全複製及選具代表性樣本策略:</strong><br>直接投資相關資產而不經第三者所發行合成複製工具的交易所買賣基金,其交易對手風險通常不是太大問題。
+                        </p>
+
+                        <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-bottom: 10px;"
+                           data-tc="<strong>ii. 綜合複製策略:</strong><br>採取綜合複製策略(如掉期合約)的交易所買賣基金需承受源自交易商的交易對手風險。若交易商失責,基金或要蒙受損失。"
+                           data-sc="<strong>ii. 综合复制策略:</strong><br>采取综合复制策略(如掉期合约)的交易所买卖基金需承受源自交易商的交易对手风险。若交易商失责,基金或要蒙受损失。"
+                           data-en="<strong>ii. Synthetic replication strategies:</strong><br>Swap-based ETFs are exposed to counterparty risk of the swap dealers and may suffer losses if such dealers default or fail to honor their contractual commitments.">
+                            <strong>ii. 綜合複製策略:</strong><br>採取綜合複製策略(如掉期合約)的交易所買賣基金需承受源自交易商的交易對手風險。若交易商失責,基金或要蒙受損失。
+                        </p>
+                    </div>
+                </div>
+            </div> <div class="btn-container">
+                <button type="button" class="nav-btn lang" onclick="prevPage(5)" style="background-color: #95a5a6; margin-right: 15px;" data-tc="上一頁" data-sc="上一页" data-en="Previous Page">上一頁</button>
+                <button type="button" class="nav-btn lang" onclick="nextPage(7)" data-tc="下一頁" data-sc="下一页" data-en="Next Page">下一頁</button>
+            </div>
+
+        </div> <div id="web-page-7" class="web-page">
+<div class="section">
+                <div class="risk-clause" style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #eee;">
+                    <strong class="lang" style="font-size: 14px; color: var(--primary-color);" 
+                            data-tc="7. 提供將你的證券抵押品等再質押的授權書的風險:" 
+                            data-sc="7. 提供将你的证券抵押品等再质押的授权书的风险:" 
+                            data-en="7. Risk of providing an authority to repledge your securities collateral:">7. 提供將你的證券抵押品等再質押的授權書的風險:</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px;"
+                       data-tc="向持牌人提供授權書容許其質押你的證券以取得財務通融存在一定風險。除非你是專業投資者，否則你的授權書必須指明有效期且不得超逾12個月。"
+                       data-sc="向持牌人提供授权书容许其质押你的证券以取得财务通融存在一定风险。除非你是专业投资者，否则你的授权书必须指明有效期且不得超逾12个月。"
+                       data-en="There is risk if you provide the licensed or registered person with an authority that allows it to apply your securities or securities collateral... If your securities are held in Hong Kong, the above arrangement is allowed only if you consent in writing... Unless you are a professional investor, your authority must be limited to not more than 12 months.">
+                        向持牌人提供授權書容許其質押你的證券以取得財務通融存在一定風險。除非你是專業投資者，否則你的授權書必須指明有效期且不得超逾12個月。
+                    </p>
+                </div>
+
+                <div class="risk-clause" style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #eee;">
+                    <strong class="lang" style="font-size: 14px; color: var(--primary-color);" 
+                            data-tc="8. 保證金買賣的風險:" 
+                            data-sc="8. 保证金买卖的风险:" 
+                            data-en="8. Risk of margin trading:">8. 保證金買賣的風險:</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px;"
+                       data-tc="藉存放抵押品而取得融資的虧損風險可能極大。你所蒙受的虧蝕可能會超過你存放作為抵押品的資產。市場情況可能使備用交易指示，例如“止蝕”或“限價”指示無法執行。"
+                       data-sc="藉存放抵押品而取得融资的亏损风险可能极大。你所蒙受的亏蚀可能会超过你存放作为抵押品的资产。市场情况可能使备用交易指示，例如“止蚀”或“限价”指示无法执行。"
+                       data-en="The risk of loss in financing a transaction by deposit of collateral is significant. You may sustain losses in excess of your cash and any other assets deposited as collateral. Market conditions may make it impossible to execute 'stop-loss' orders.">
+                        藉存放抵押品而取得融資的虧損風險可能極大。你所蒙受的虧蝕可能會超過你存放作為抵押品的資產。市場情況可能使備用交易指示，例如“止蝕”或“限價”指示無法執行。
+                    </p>
+                </div>
+
+                <div class="risk-clause" style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #eee;">
+                    <strong class="lang" style="font-size: 14px; color: var(--primary-color);" 
+                            data-tc="9. 買賣納斯達克-美國證券交易所證券的風險:" 
+                            data-sc="9. 买卖纳斯达克-美国证券交易所证券的风险:" 
+                            data-en="9. Risk of trading Nasdaq-Amex securities:">9. 買賣納斯達克-美國證券交易所證券的風險:</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px;"
+                       data-tc="納斯達克-美國證券交易所試驗計劃的證券是為熟悉投資技巧的投資者而設，並非按主板上市類別加以監管。"
+                       data-sc="纳斯达克-美国证券交易所试验计划的证券是为熟悉投资技巧的投资者而设，并非按主板上市类别加以监管。"
+                       data-en="The securities under the Nasdaq-Amex Pilot Program are aimed at sophisticated investors. These securities are not regulated as a primary or secondary listing on the Main Board of HKEx.">
+                        納斯達克-美國證券交易所試驗計劃的證券是為熟悉投資技巧的投資者而設，並非按主板上市類別加以監管。
+                    </p>
+                </div>
+
+                <div class="risk-clause" style="margin-bottom: 15px;">
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px;"
+                       data-tc="如中、英文版本有任何差異,以英文版本為準。"
+                       data-sc="如中、英文版本有任何差异,以英文版本为准。"
+                       data-en="If there is any discrepancy between the English and Chinese version, the English version shall prevail.">
+                        如中、英文版本有任何差異,以英文版本為準。
+                    </p>
+                </div>
+            </div> <div class="section" style="page-break-inside: avoid;">
+                <div class="section-title lang" data-tc="客戶確認" data-sc="客户确认" data-en="Client Acknowledgement">客戶確認</div>
+                <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-bottom: 20px;"
+                   data-tc="本人/吾等確認本人/吾等已經收到並詳細閱讀本人/吾等所選擇的語言提供風險披露聲明並提出問題。"
+                   data-sc="本人/吾等确认本人/吾等已经收到并详细阅读本人/吾等所选择的语言提供风险披露声明并提出问题。"
+                   data-en="I/We, the Client, acknowledges that I/we have been invited to read the Risk Disclosure Statement in the language of our choice, and to ask questions.">
+                    本人/吾等確認本人/吾等已經收到並詳細閱讀本人/吾等所選擇的語言提供風險披露聲明並提出問題。
+                </p>
+                
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td class="lang" style="width: 33%; height: 80px; vertical-align: bottom; text-align: center; border-bottom: 1px solid #ccc; color: #aaa;"
+                            data-tc="[簽署]" data-sc="[签署]" data-en="[Signature]">[簽署]</td>
+                        <td style="width: 33%; height: 80px; vertical-align: bottom; text-align: center; border-bottom: 1px solid #ccc;">
+                            <textarea class="lang-placeholder" rows="1" style="width: 90%; border: none; background: transparent; text-align: center; padding: 0;" 
+                                      data-tc-placeholder="客戶姓名" data-sc-placeholder="客户姓名" data-en-placeholder="Name" placeholder="客戶姓名"></textarea>
+                        </td>
+                        <td style="width: 33%; height: 80px; vertical-align: bottom; text-align: center; border-bottom: 1px solid #ccc;">
+                            <input type="date" style="width: 90%; border: none; background: transparent; text-align: center; padding: 0;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lang" style="text-align: center; font-size: 13px; padding-top: 5px;" data-tc="客戶簽署" data-sc="客户签署" data-en="Signature">客戶簽署</td>
+                        <td class="lang" style="text-align: center; font-size: 13px; padding-top: 5px;" data-tc="客戶姓名" data-sc="客户姓名" data-en="Name">客戶姓名</td>
+                        <td class="lang" style="text-align: center; font-size: 13px; padding-top: 5px;" data-tc="日期" data-sc="日期" data-en="Date">日期</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="section" style="page-break-inside: avoid;">
+                <div class="section-title lang" data-tc="職員聲明" data-sc="职员声明" data-en="Staff Declaration">職員聲明</div>
+                <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-bottom: 20px;"
+                   data-tc="本人,以持牌人身份,確認本人已提供風險披露聲明及邀請【客戶】閱讀並提出問題。"
+                   data-sc="本人,以持牌人身份,确认本人已提供风险披露声明及邀请【客户】阅读并提出问题。"
+                   data-en="I, a licensed person, declare that I have provided the client with the Risk Disclosure Statement and invited the client to read and ask questions.">
+                    本人,以持牌人身份,確認本人已提供風險披露聲明及邀請【客戶】閱讀並提出問題。
+                </p>
+                
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td class="lang" style="width: 25%; height: 80px; vertical-align: bottom; text-align: center; border-bottom: 1px solid #ccc; color: #aaa;"
+                            data-tc="[簽署]" data-sc="[签署]" data-en="[Signature]">[簽署]</td>
+                        <td style="width: 25%; height: 80px; vertical-align: bottom; text-align: center; border-bottom: 1px solid #ccc;">
+                            <textarea class="lang-placeholder" rows="1" style="width: 90%; border: none; background: transparent; text-align: center; padding: 0;" 
+                                      data-tc-placeholder="職員姓名" data-sc-placeholder="职员姓名" data-en-placeholder="Staff Name" placeholder="職員姓名"></textarea>
+                        </td>
+                        <td style="width: 25%; height: 80px; vertical-align: bottom; text-align: center; border-bottom: 1px solid #ccc;">
+                            <textarea class="lang-placeholder" rows="1" style="width: 90%; border: none; background: transparent; text-align: center; padding: 0;" 
+                                      data-tc-placeholder="中央編號" data-sc-placeholder="中央编号" data-en-placeholder="CE No." placeholder="中央編號"></textarea>
+                        </td>
+                        <td style="width: 25%; height: 80px; vertical-align: bottom; text-align: center; border-bottom: 1px solid #ccc;">
+                            <input type="date" style="width: 90%; border: none; background: transparent; text-align: center; padding: 0;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lang" style="text-align: center; font-size: 12px; padding-top: 5px;" data-tc="職員簽署" data-sc="职员签署" data-en="Staff Signature">職員簽署</td>
+                        <td class="lang" style="text-align: center; font-size: 12px; padding-top: 5px;" data-tc="職員姓名" data-sc="职员姓名" data-en="Staff Name">職員姓名</td>
+                        <td class="lang" style="text-align: center; font-size: 12px; padding-top: 5px;" data-tc="證監會編號" data-sc="证监会编号" data-en="SFC CE No.">證監會編號</td>
+                        <td class="lang" style="text-align: center; font-size: 12px; padding-top: 5px;" data-tc="日期" data-sc="日期" data-en="Date">日期</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="btn-container">
+                <button type="button" class="nav-btn lang" onclick="prevPage(6)" style="background-color: #95a5a6; margin-right: 15px;" data-tc="上一頁" data-sc="上一页" data-en="Previous Page">上一頁</button>
+                <button type="button" class="nav-btn lang" onclick="nextPage(8)" data-tc="下一頁" data-sc="下一页" data-en="Next Page">下一頁</button>
+            </div>
+
+        </div> <div id="web-page-8" class="web-page">
+<div class="section" style="page-break-inside: avoid;">
+                <div class="section-title lang" data-tc="文件清單" data-sc="文件清单" data-en="Document List">文件清單</div>
+                <p class="lang" style="font-size: 13px; color: var(--primary-color); font-weight: bold; margin-bottom: 15px;"
+                   data-tc="(請提供以下文件)" data-sc="(请提供以下文件)" data-en="(Please provide the following documents)">
+                    (請提供以下文件)
+                </p>
+                
+                <div class="checkbox-group" style="flex-direction: column; align-items: flex-start; gap: 10px;">
+                    <label style="align-items: flex-start;"><input type="checkbox"> <span class="lang" style="font-size: 13px;" data-tc="經核實身份證明文件副本" data-sc="经核实身份证明文件副本" data-en="Certified copy of ID or passport">經核實身份證明文件副本</span></label>
+                    <label style="align-items: flex-start;"><input type="checkbox"> <span class="lang" style="font-size: 13px;" data-tc="經核實住宅地址證明(最近三個月)" data-sc="经核实住宅地址证明(最近三个月)" data-en="Certified copy of Address Proof (latest 3 months)">經核實住宅地址證明(最近三個月)</span></label>
+                    <label style="align-items: flex-start;"><input type="checkbox"> <span class="lang" style="font-size: 13px;" data-tc="資產證明(投資組合不少於 800 萬港元)" data-sc="资产证明(投资组合不少于 800 万港元)" data-en="Asset Proof (Portfolio >= HK$8M)">資產證明(投資組合不少於 800 萬港元)</span></label>
+                    <label style="align-items: flex-start;"><input type="checkbox"> <span class="lang" style="font-size: 13px;" data-tc="財富/資金來源" data-sc="财富/资金来源" data-en="Source of wealth/funds">財富/資金來源</span></label>
+                    <label style="align-items: flex-start;"><input type="checkbox"> <span class="lang" style="font-size: 13px;" data-tc="個人稅務居留自我認證 (FATCA/CRS)" data-sc="个人税务居留自我认证 (FATCA/CRS)" data-en="Individual Tax Residency Self Certification (FATCA/CRS)">個人稅務居留自我認證 (FATCA/CRS)</span></label>
+                    <label style="align-items: flex-start;"><input type="checkbox"> <span class="lang" style="font-size: 13px;" data-tc="客戶開戶表及風險概況問卷" data-sc="客户开户表及风险概况问卷" data-en="Account Opening Form & Risk Profile (RPQ)">客戶開戶表及風險概況問卷</span></label>
+                    <label style="align-items: flex-start;"><input type="checkbox"> <span class="lang" style="font-size: 13px;" data-tc="專業投資者聲明書" data-sc="专业投资者声明书" data-en="Professional Investor Declaration">專業投資者聲明書</span></label>
+                    <label style="align-items: flex-start;"><input type="checkbox"> <span class="lang" style="font-size: 13px;" data-tc="服務協議及風險披露" data-sc="服务协议及风险披露" data-en="Service Agreement with Risk Disclosure">服務協議及風險披露</span></label>
+                </div>
+                
+                <div class="instructions lang" style="margin-top: 15px; padding: 10px; background-color: #fdf2e9; border-left: 3px solid var(--secondary-color);"
+                     data-tc="真實副本的核證需由專業第三者(如:會計師、律師或證監會持牌人士)執行。"
+                     data-sc="真实副本的核证需由专业第三者(如:会计师、律师或证监会持牌人士)执行。"
+                     data-en="Certification should be performed by a professional third party (e.g. CPA, Lawyer, or SFC Licensed Person).">
+                    真實副本的核證需由專業第三者(如:會計師、律師或證監會持牌人士)執行。
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title lang" data-tc="個人資料(私隱)通知" data-sc="个人资料(私隐)通知" data-en="Personal Data (Privacy) Notice">個人資料(私隱)通知</div>
+                
+                <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-bottom: 20px;"
+                   data-tc="本聲明是根據香港《個人資料(私隱)條例》之要求而提供。"
+                   data-sc="本声明是根据香港《个人资料(私隐)条例》之要求而提供。"
+                   data-en="This Statement is provided in accordance with the requirements of the Hong Kong Personal Data (Privacy) Ordinance.">
+                    本聲明是根據香港《個人資料(私隱)條例》之要求而提供。
+                </p>
+
+                <div class="risk-clause" style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #eee;">
+                    <strong class="lang" style="font-size: 14px; color: var(--primary-color);" 
+                            data-tc="1. 披露義務" 
+                            data-sc="1. 披露义务" 
+                            data-en="1. Disclosure Obligation">1. 披露義務</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px;"
+                       data-tc="客戶需向集團提供個人資料。假如不提供此等資料，本集團可能無法為客戶開設或維持帳戶。"
+                       data-sc="客户需向集团提供个人资料。假如不提供此等资料，本集团可能无法为客户开设或维持帐户。"
+                       data-en="It is necessary for Customers to supply the Group with personal data. Failure to supply such data may result in the Group being unable to open or maintain an account.">
+                        客戶需向集團提供個人資料。假如不提供此等資料，本集團可能無法為客戶開設或維持帳戶。
+                    </p>
+                </div>
+
+                <div class="risk-clause" style="margin-bottom: 15px;">
+                    <strong class="lang" style="font-size: 14px; color: var(--primary-color);" 
+                            data-tc="2. 個人資料之使用" 
+                            data-sc="2. 个人资料之使用" 
+                            data-en="2. Use of Personal Data">2. 個人資料之使用</strong>
+                    <div style="margin-left: 15px; margin-top: 10px;">
+                        <strong class="lang" style="font-size: 13px; color: #444;" 
+                                data-tc="2.1 使用者:" 
+                                data-sc="2.1 使用者:" 
+                                data-en="2.1 Users:">2.1 使用者:</strong>
+                        <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px;"
+                           data-tc="資料可被集團成員、董事、僱員、代理、授權第三方（如律師、託管人）或監管機構使用。"
+                           data-sc="资料可被集团成员、董事、雇员、代理、授权第三方（如律师、托管人）或监管机构使用。"
+                           data-en="Data may be used by members of the Group, directors, employees, agents, authorized third parties (e.g. lawyers, custodians), or regulatory bodies.">
+                            資料可被集團成員、董事、僱員、代理、授權第三方（如律師、託管人）或監管機構使用。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button type="button" class="nav-btn lang" onclick="prevPage(7)" style="background-color: #95a5a6; margin-right: 15px;" data-tc="上一頁" data-sc="上一页" data-en="Previous Page">上一頁</button>
+                <button type="button" class="nav-btn lang" onclick="nextPage(9)" data-tc="下一頁" data-sc="下一页" data-en="Next Page">下一頁</button>
+            </div>
+
+        </div> <div id="web-page-9" class="web-page">
+<div class="section" style="page-break-inside: avoid;">
+                <div class="risk-clause" style="margin-bottom: 15px;">
+                    <div style="margin-left: 15px;">
+                        <strong class="lang" style="font-size: 13px; color: #444;" 
+                                data-tc="2.2 目的:" 
+                                data-sc="2.2 目的:" 
+                                data-en="2.2 Purposes:">2.2 目的:</strong>
+                        <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px;"
+                           data-tc="目的包括：客戶核實、信用調查、賬戶管理、設計產品、直接促銷（可選擇拒絕）及遵守法律規例。"
+                           data-sc="目的包括：客户核实、信用调查、帐户管理、设计产品、直接促销（可选择拒绝）及遵守法律规例。"
+                           data-en="Purposes include: customer verification, credit checking, account administration, designing products, direct marketing (subject to opt-out), and compliance with laws/regulations.">
+                            目的包括：客戶核實、信用調查、賬戶管理、設計產品、直接促銷（可選擇拒絕）及遵守法律規例。
+                        </p>
+                        
+                        <div class="checkbox-group" style="margin-top: 10px; padding: 10px; background-color: #fcf3cf; border: 1px solid #f1c40f;">
+                            <label style="font-size: 13px; font-weight: bold;">
+                                <input type="checkbox"> 
+                                <span class="lang" data-tc="本人反對將個人資料用於直接促銷。" data-sc="本人反对将个人资料用于直接促销。" data-en="I object to the use of my personal data in direct marketing.">本人反對將個人資料用於直接促銷。</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="risk-clause" style="margin-bottom: 15px;">
+                    <strong class="lang" style="font-size: 14px; color: var(--primary-color);" 
+                            data-tc="3. 查閱和修正的權利" 
+                            data-sc="3. 查阅和修正的权利" 
+                            data-en="3. Rights of Access and Correction">3. 查閱和修正的權利</strong>
+                    <p class="lang" style="font-size: 13px; line-height: 1.6; text-align: justify; margin-top: 5px;"
+                       data-tc="客戶有權查閱和修正個人資料。請求應以書面形式向豐誠提出。"
+                       data-sc="客户有权查阅和修正个人资料。请求应以书面形式向丰诚提出。"
+                       data-en="Customers have the right to access and correct personal data. Requests should be made to Forshine in writing.">
+                        客戶有權查閱和修正個人資料。請求應以書面形式向豐誠提出。
+                    </p>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button type="button" class="nav-btn lang" onclick="prevPage(8)" style="background-color: #95a5a6; margin-right: 15px;" data-tc="上一頁" data-sc="上一页" data-en="Previous Page">上一頁</button>
+                <button type="button" class="submit-btn lang" id="t-submit-btn" onclick="generatePDF()" data-tc="一鍵生成 PDF 並下載" data-sc="一键生成 PDF 并下载" data-en="Generate & Download PDF">一鍵生成 PDF 並下載</button>
+            </div>
+
+        </div> </div> <script>
+        // 1. 分頁切換邏輯
+        function nextPage(pageNumber) {
+            window.scrollTo(0, 0);
+            document.querySelectorAll('.web-page').forEach(page => page.classList.remove('active'));
+            document.getElementById('web-page-' + pageNumber).classList.add('active');
+        }
+
+        function prevPage(pageNumber) {
+            window.scrollTo(0, 0);
+            document.querySelectorAll('.web-page').forEach(page => page.classList.remove('active'));
+            document.getElementById('web-page-' + pageNumber).classList.add('active');
+        }
+
+        // 2. 核心：單語無縫切換引擎
+        function changeLanguage() {
+            const lang = document.getElementById("language-selector").value; // 'tc', 'sc', 'en'
+            
+            // 掃描並替換所有帶有 .lang 標籤的普通文字 (使用 innerHTML 支援粗體和換行標籤)
+            document.querySelectorAll('.lang').forEach(el => {
+                const newText = el.getAttribute('data-' + lang);
+                if (newText) {
+                    el.innerHTML = newText;
+                }
+            });
+
+            // 掃描並替換所有帶有 .lang-placeholder 標籤的輸入框背景提示詞
+            document.querySelectorAll('.lang-placeholder').forEach(el => {
+                const newPlaceholder = el.getAttribute('data-' + lang + '-placeholder');
+                if (newPlaceholder) {
+                    el.setAttribute('placeholder', newPlaceholder);
+                }
+            });
+        }
+
+        // 當網頁一加載時，立即執行一次翻譯，確保預設顯示正確
+        window.onload = function() {
+            changeLanguage();
+        };
+
+        // 3. 核心：一鍵生成 PDF 魔法
+        async function generatePDF() {
+            const btn = document.getElementById("t-submit-btn");
+            const originalText = btn.innerText;
+            const lang = document.getElementById("language-selector").value;
+            
+            // 根據當前語言顯示排版中的提示文字
+            const loadingText = lang === 'en' ? "Generating..." : (lang === 'sc' ? "正在排版生成中..." : "正在排版生成中...");
+            
+            btn.innerText = loadingText;
+            btn.disabled = true;
+
+            // 進入導出模式：隱藏按鈕、語言選擇器，並強制展開所有隱藏的分頁
+            document.body.classList.add('pdf-exporting');
+
+            const element = document.getElementById('pdf-export-container');
+            
+            // 配置 html2pdf 參數
+            const opt = {
+                margin:       [15, 10, 15, 10],
+                filename:     'Forshine_Account_Opening_Form.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            try {
+                // 生成並存檔
+                await html2pdf().set(opt).from(element).save();
+            } catch (error) {
+                console.error("PDF Error:", error);
+                alert(lang === 'en' ? "Failed to generate PDF. Please check the console." : "生成失敗，請檢查瀏覽器控制台。");
+            } finally {
+                // 退出導出模式：恢復網頁原始狀態
+                document.body.classList.remove('pdf-exporting');
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
