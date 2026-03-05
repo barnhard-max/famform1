@@ -1090,35 +1090,49 @@
             const originalText = btn.innerText;
             const lang = document.getElementById("language-selector").value;
             
-            // 根據當前語言顯示排版中的提示文字
+            // 根据当前语言显示排版中的提示文字
             const loadingText = lang === 'en' ? "Generating..." : (lang === 'sc' ? "正在排版生成中..." : "正在排版生成中...");
             
             btn.innerText = loadingText;
             btn.disabled = true;
 
-            // 進入導出模式：隱藏按鈕、語言選擇器，並強制展開所有隱藏的分頁
+            // 进入导出模式：隐藏按钮、语言选择器，并强制展开所有隐藏的分页
             document.body.classList.add('pdf-exporting');
 
             const element = document.getElementById('pdf-export-container');
             
-            // 配置 html2pdf 參數
+            // 配置 html2pdf 参数 (已应用紧凑版排版优化)
             const opt = {
-                margin:       [15, 10, 15, 10],
+                margin:       [10, 10, 10, 10], 
                 filename:     'Forshine_Account_Opening_Form.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+                pagebreak:    { mode: ['css', 'legacy'] }
             };
 
             try {
-                // 生成並存檔
+                // 生成并存档
                 await html2pdf().set(opt).from(element).save();
+                
+                // 成功下载后，延迟 0.5 秒弹出合规与安全提示框 (确保下载动作已触发)
+                setTimeout(() => {
+                    let alertMsg = "";
+                    if (lang === 'en') {
+                        alertMsg = "Your Account Opening Form PDF has been successfully generated and downloaded!\n\nTo ensure your data security, please send the downloaded PDF file from your personal email to our Compliance Department at:\nadmin@forshine-am.com";
+                    } else if (lang === 'sc') {
+                        alertMsg = "您的开户表格 PDF 已成功生成并下载！\n\n为保障您的数据安全，请将该 PDF 文件通过您本人的邮箱，发送至本公司的合规部电邮：\nadmin@forshine-am.com";
+                    } else {
+                        alertMsg = "您的開戶表格 PDF 已成功生成並下載！\n\n為保障您的數據安全，請將該 PDF 文件通過您本人的郵箱，發送至本公司的合規部電郵：\nadmin@forshine-am.com";
+                    }
+                    alert(alertMsg);
+                }, 500);
+
             } catch (error) {
                 console.error("PDF Error:", error);
-                alert(lang === 'en' ? "Failed to generate PDF. Please check the console." : "生成失敗，請檢查瀏覽器控制台。");
+                alert(lang === 'en' ? "Failed to generate PDF. Please check the console." : "生成失败，请检查浏览器控制台。");
             } finally {
-                // 退出導出模式：恢復網頁原始狀態
+                // 退出导出模式：恢复网页原始状态
                 document.body.classList.remove('pdf-exporting');
                 btn.innerText = originalText;
                 btn.disabled = false;
